@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # CORS를 import
 
 app = Flask(__name__)
+CORS(app)  # CORS 설정 추가
 
 @app.route('/get_command', methods=['POST'])
 def get_command():
