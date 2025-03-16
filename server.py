@@ -6,12 +6,7 @@ app = Flask(__name__)
 # 명령 상태 저장
 command = {"action": "stop"}  # 기본 상태는 "정지"
 
-@app.route("/")
-def home():
-    return "Flask 서버가 정상적으로 실행 중입니다!"
-
-# Kivy 앱에서 명령 전송
-@app.route("/send_command", methods=["POST"])
+@app.route("/send_command", methods=["POST"])  # POST 메서드로 명령 처리
 def send_command():
     global command
     data = request.json  # {"action": "start"} 또는 {"action": "stop"}
@@ -22,8 +17,7 @@ def send_command():
     
     return jsonify({"status": "error", "message": "Invalid command"}), 400
 
-# 현재 명령 상태 조회 (앱에서 사용)
-@app.route("/get_command", methods=["GET"])
+@app.route("/get_command", methods=["GET"])  # GET 메서드로 명령 상태 조회
 def get_command():
     return jsonify(command)
 
