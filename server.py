@@ -1,34 +1,25 @@
-import os
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# 명령 상태 저장
-command = {"action": "stop"}  # 기본 상태는 "정지"
+# 원격 조종 명령 저장
+command = {"action": "none"}
 
-@app.route("/")
-def home():
-    return "Flask 서버가 정상적으로 실행 중입니다!"
-
-# Kivy 앱에서 명령 전송
 @app.route("/send_command", methods=["POST"])
 def send_command():
     global command
-    data = request.json  # {"action": "operate"} 또는 {"action": "pause"}
-    print(f"received by server: {data}") # 디버깅용 로그
-    
-    if data and data.get("action") in ["operate", "pause"]:
+    data = request.json  # JSON 데이터 받기
+    print(f"📥 서버에서 받은 데이터: {data}")  # 디버깅용 로그 추가
+
+    if data and data.get("action") in ["start", "stop"]:
         command = data
         return jsonify({"status": "command received", "command": command})
-    
+
     return jsonify({"status": "error", "message": "Invalid command"}), 400
 
-# 현재 명령 상태 조회 (객체 탐지 코드에서 사용)
 @app.route("/get_command", methods=["GET"])
 def get_command():
     return jsonify(command)
 
-# Render의 포트 환경 변수 사용
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render에서 할당된 포트 사용
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=5000)
