@@ -14,9 +14,10 @@ def home():
 @app.route("/send_command", methods=["POST"])
 def send_command():
     global command
-    data = request.json  # {"action": "start"} 또는 {"action": "stop"}
+    data = request.json  # {"action": "operate"} 또는 {"action": "pause"}
+    print(f"received by server: {data}") # 디버깅용 로그
     
-    if data and data.get("action") in ["start", "stop"]:
+    if data and data.get("action") in ["operate", "pause"]:
         command = data
         return jsonify({"status": "command received", "command": command})
     
